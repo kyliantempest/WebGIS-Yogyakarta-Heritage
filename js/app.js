@@ -806,14 +806,27 @@ function exportToGoogleMaps(lat1, lng1, lat2, lng2) {
 }
 
 function pesanOjol(lat2, lng2) {
-  // Menggunakan URL Intent resmi Gojek untuk set tujuan (Drop-off)
-  const urlGojek = `https://gojek.link/app/ride?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}`;
-  
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-      window.open(urlGojek, '_blank');
-  } else {
-      alert("Fitur Pesan Ojol berjalan paling optimal jika dibuka melalui Smartphone/HP yang sudah terinstal aplikasi Gojek.");
+  
+  if (!isMobile) {
+      alert("Fitur Pesan Ojol berjalan paling optimal jika dibuka melalui Smartphone/HP Anda.");
+      return;
+  }
+
+  // Menampilkan pop-up pilihan layanan ke user
+  const pilihan = prompt("Pilih Layanan Gojek:\nKetik 1 : GoRide (Motor)\nKetik 2 : GoCar (Mobil)", "1");
+
+  if (pilihan === "1") {
+      // Direct langsung ke menu GoRide
+      const urlGoRide = `https://gojek.link/app/ride?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}`;
+      window.open(urlGoRide, '_blank');
+  } else if (pilihan === "2") {
+      // Direct langsung ke menu GoCar
+      const urlGoCar = `https://gojek.link/app/car?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}`;
+      window.open(urlGoCar, '_blank');
+  } else if (pilihan !== null) {
+      // Jika input salah selain 1 atau 2
+      alert("Pilihan tidak valid. Silakan ketik angka 1 atau 2.");
   }
 }
 
