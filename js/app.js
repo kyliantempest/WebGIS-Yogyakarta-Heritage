@@ -803,24 +803,19 @@ function pesanOjol(lat2, lng2) {
       return;
   }
 
-  // Meminta pilihan layanan dari user
+  // Jendela pilihan layanan GoRide atau GoCar
   const pilihan = prompt("Pilih Layanan Gojek:\nKetik 1 : GoRide (Motor)\nKetik 2 : GoCar (Mobil)", "1");
 
-  let layananPath = "ride"; 
-  if (pilihan === "2") {
-      layananPath = "car"; 
-  } else if (pilihan !== "1" && pilihan !== null) {
+  if (pilihan === "1") {
+      // Protokol khusus untuk langsung nembak aplikasi GoRide + set rute tujuan
+      const intentGoRide = `intent://ride?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}#Intent;scheme=gojek;package=com.gojek.app;end`;
+      window.location.href = intentGoRide;
+  } else if (pilihan === "2") {
+      // Protokol khusus untuk langsung nembak aplikasi GoCar + set rute tujuan
+      const intentGoCar = `intent://car?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}#Intent;scheme=gojek;package=com.gojek.app;end`;
+      window.location.href = intentGoCar;
+  } else if (pilihan !== null) {
       alert("Pilihan tidak valid. Silakan ketik angka 1 atau 2.");
-      return;
-  }
-
-  if (pilihan !== null) {
-      // SOLUSI BIAR GA LOADING LAMA:
-      // Membaca query koordinat secara dinamis menggunakan encodeURIComponent bawaan JS
-      const gmapsQuery = `https://www.google.com/maps/search/?api=1&query=${lat2},${lng2}`;
-      const urlGojekDynamic = `https://gojek.link/app/${layananPath}?gmaps=${encodeURIComponent(gmapsQuery)}`;
-      
-      window.open(urlGojekDynamic, '_blank');
   }
 }
 
