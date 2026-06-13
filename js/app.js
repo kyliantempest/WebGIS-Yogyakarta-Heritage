@@ -813,21 +813,25 @@ function pesanOjol(lat2, lng2) {
       return;
   }
 
-  // Menampilkan pop-up pilihan layanan ke user
+  // Meminta pilihan layanan dari user
   const pilihan = prompt("Pilih Layanan Gojek:\nKetik 1 : GoRide (Motor)\nKetik 2 : GoCar (Mobil)", "1");
 
-  if (pilihan === "1") {
-      // Direct langsung ke menu GoRide
-      const urlGoRide = `https://gojek.link/app/ride?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}`;
-      window.open(urlGoRide, '_blank');
-  } else if (pilihan === "2") {
-      // Direct langsung ke menu GoCar
-      const urlGoCar = `https://gojek.link/app/car?drop_off_latitude=${lat2}&drop_off_longitude=${lng2}`;
-      window.open(urlGoCar, '_blank');
-  } else if (pilihan !== null) {
-      // Jika input salah selain 1 atau 2
+  // Trik Menggunakan struktur pencarian koordinat Google Maps di dalam intent Gojek
+  // Ini memaksa sistem Gojek melacak koordinat lokasi heritage tersebut
+  let layananPath = "ride"; // Default GoRide
+  if (pilihan === "2") {
+      layananPath = "car"; // Ubah ke GoCar
+  } else if (pilihan !== "1" && pilihan !== null) {
       alert("Pilihan tidak valid. Silakan ketik angka 1 atau 2.");
+      return;
   }
+
+  if (pilihan !== null) {
+      // Trik kombinasi parameter pencarian lokasi agar auto-set rute tujuan di aplikasi Gojek
+      const urlGojekDynamic = `https://gojek.link/app/${layananPath}?gmaps=https://www.google.com/maps/search/?api=1%26query=${lat2},${lng2}`;
+      window.open(urlGojekDynamic, '_blank');
+  }
+}
 }
 
 function clearRoute() {
