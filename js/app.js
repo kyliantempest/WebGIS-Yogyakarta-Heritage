@@ -795,16 +795,6 @@ function eksekusiRuteUtama(lat1, lng1, lat2, lng2, mode, resDiv, isCurrentLocati
     });
 }
 
-function exportToGoogleMaps(lat1, lng1, lat2, lng2) {
-  const mode = document.getElementById('route-mode')?.value || 'driving';
-  let travelmode = 'driving';
-  if (mode === 'foot') travelmode = 'walking';
-  if (mode === 'bike') travelmode = 'bicycling';
-  
-  const url = `https://www.google.com/maps/dir/?api=1&origin=${lat1},${lng1}&destination=${lat2},${lng2}&travelmode=${travelmode}`;
-  window.open(url, '_blank');
-}
-
 function pesanOjol(lat2, lng2) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   
@@ -816,22 +806,22 @@ function pesanOjol(lat2, lng2) {
   // Meminta pilihan layanan dari user
   const pilihan = prompt("Pilih Layanan Gojek:\nKetik 1 : GoRide (Motor)\nKetik 2 : GoCar (Mobil)", "1");
 
-  // Trik Menggunakan struktur pencarian koordinat Google Maps di dalam intent Gojek
-  // Ini memaksa sistem Gojek melacak koordinat lokasi heritage tersebut
-  let layananPath = "ride"; // Default GoRide
+  let layananPath = "ride"; 
   if (pilihan === "2") {
-      layananPath = "car"; // Ubah ke GoCar
+      layananPath = "car"; 
   } else if (pilihan !== "1" && pilihan !== null) {
       alert("Pilihan tidak valid. Silakan ketik angka 1 atau 2.");
       return;
   }
 
   if (pilihan !== null) {
-      // Trik kombinasi parameter pencarian lokasi agar auto-set rute tujuan di aplikasi Gojek
-      const urlGojekDynamic = `https://gojek.link/app/${layananPath}?gmaps=https://www.google.com/maps/search/?api=1%26query=${lat2},${lng2}`;
+      // SOLUSI BIAR GA LOADING LAMA:
+      // Membaca query koordinat secara dinamis menggunakan encodeURIComponent bawaan JS
+      const gmapsQuery = `https://www.google.com/maps/search/?api=1&query=${lat2},${lng2}`;
+      const urlGojekDynamic = `https://gojek.link/app/${layananPath}?gmaps=${encodeURIComponent(gmapsQuery)}`;
+      
       window.open(urlGojekDynamic, '_blank');
   }
-}
 }
 
 function clearRoute() {
